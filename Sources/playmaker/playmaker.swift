@@ -1,6 +1,7 @@
 public struct playmaker {
-    public private(set) var text = "Hello, World!"
-
-    public init() {
+    
+    public init(args: [String]) {
+        let app = App()
+        app.process(using: args)
     }
 }
