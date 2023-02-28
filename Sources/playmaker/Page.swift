@@ -84,6 +84,7 @@ struct Page {
         // we always start in text mode
         var inCode = false
         var inPsuedo = false
+        var wasPrevInCode = false
         var output = "/*:\n"
 
         // don't put at navigation bar at the top of the introduction
@@ -103,6 +104,11 @@ struct Page {
             }
 
             if line.hasPrefix("<psuedo>") {
+                if(inCode) {
+                    inCode = false
+                    output += "/*:\n"
+                    wasPrevInCode = true
+                }
                 if !inPsuedo {
                     inPsuedo = true
                     output += "*/\n/*:```"
@@ -112,6 +118,12 @@ struct Page {
                 if inPsuedo {
                     inPsuedo = false
                     output += "```*/\n/*:\n"
+                    
+                    if(wasPrevInCode) {
+                        wasPrevInCode = false
+                        inCode = true
+                        output += "*/\n"
+                    }
                 }
                 line = String(line.dropFirst(9))
             } else {
